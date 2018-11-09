@@ -1,0 +1,6 @@
+name: bio-ik
+
+distro: kinetic
+
+#packages:
+#  - ros-kinetic-moveit
