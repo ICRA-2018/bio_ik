@@ -2,5 +2,7 @@ name: bio-ik
 
 distro: kinetic
 
-#packages:
-#  - ros-kinetic-moveit
+build: catkin_make
+
+packages:
+  - ros-kinetic-moveit
