@@ -1,8 +1,10 @@
 name: bio-ik
 
-distro: kinetic
+base: 
+  ubuntu: 16.04
+  ros: kinetic-ros-base
 
 build: catkin_make
 
-packages:
+apt:
   - ros-kinetic-moveit
