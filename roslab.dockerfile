@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM nvidia/opengl:1.0-glvnd-runtime-ubuntu16.04
 
 ################################## JUPYTERLAB ##################################
 
@@ -64,7 +64,7 @@ RUN rosdep init \
 # install ros packages
 ENV ROS_DISTRO kinetic
 RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y \
-    ros-kinetic-ros-base=1.3.2-0* \
+    ros-kinetic-desktop=1.3.2-0* \
     && rm -rf /var/lib/apt/lists/*
 
 # setup entrypoint
@@ -79,6 +79,32 @@ RUN apt-get -o Acquire::ForceIPv4=true update \
     ros-kinetic-moveit \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+
+################################### SOURCE #####################################
+
+RUN git clone https://github.com/PR2/pr2_common.git /pr2_common \
+ && cd /pr2_common \
+ && mkdir -p ${HOME}/catkin_ws/src \
+ && cp -R /pr2_common ${HOME}/catkin_ws/src/. \
+ && cd ${HOME}/catkin_ws \
+ && apt-get -o Acquire::ForceIPv4=true update \
+ && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && rosdep update && rosdep install --as-root apt:false --from-paths src --ignore-src -r -y" \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin_make" \
+ && rm -fr /pr2_common
+
+RUN git clone https://github.com/TAMS/pr2_bioik_moveit.git /pr2_bioik_moveit \
+ && cd /pr2_bioik_moveit \
+ && mkdir -p ${HOME}/catkin_ws/src \
+ && cp -R /pr2_bioik_moveit ${HOME}/catkin_ws/src/. \
+ && cd ${HOME}/catkin_ws \
+ && apt-get -o Acquire::ForceIPv4=true update \
+ && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && rosdep update && rosdep install --as-root apt:false --from-paths src --ignore-src -r -y" \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin_make" \
+ && rm -fr /pr2_bioik_moveit
 
 ##################################### COPY #####################################
 

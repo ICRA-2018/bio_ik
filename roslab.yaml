@@ -2,9 +2,20 @@ name: bio-ik
 
 base: 
   ubuntu: 16.04
-  ros: kinetic-ros-base
+  ros: kinetic-desktop
+  opengl: runtime
 
 build: catkin_make
 
 apt:
   - ros-kinetic-moveit
+
+source:
+  - name: pr2_common
+    repo: https://github.com/PR2/pr2_common.git
+    build: catkin_make
+
+  - name: pr2_bioik_moveit
+    repo: https://github.com/TAMS/pr2_bioik_moveit.git
+    build: catkin_make
+
